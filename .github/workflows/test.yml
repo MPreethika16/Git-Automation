@@ -1,6 +1,6 @@
-name: Run Tests Based on Submitted Language
+name: Run Tests Based on Language
 
-on:
+on: 
   push:
     branches:
       - main
@@ -9,52 +9,42 @@ on:
       - main
 
 jobs:
-  test-solutions:
+  run-tests:
     runs-on: ubuntu-latest
-
-    strategy:
-      matrix:
-        language: [c, cpp, java, py]
-
+    
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v3
 
-      - name: Set up Python
-        if: matrix.language == 'py'
-        uses: actions/setup-python@v4
-        with:
-          python-version: "3.x"
-
-      - name: Set up Java
-        if: matrix.language == 'java'
-        uses: actions/setup-java@v3
-        with:
-          distribution: "temurin"
-          java-version: "17"
-
-      - name: Set up C/C++ Compiler
-        if: matrix.language == 'c' || matrix.language == 'cpp'
-        run: sudo apt update && sudo apt install -y gcc g++
-
-      - name: Run Python Tests
-        if: matrix.language == 'py'
-        run: python tests/test.py
-
-      - name: Compile and Run C Tests
-        if: matrix.language == 'c'
+      - name: Detect Submitted File
+        id: detect-file
         run: |
-          gcc solutions/solution.c -o solution_c
-          ./solution_c < tests/test.c
+          if [ -f solutions/solution.cpp ]; then
+            echo "language=cpp" >> $GITHUB_ENV
+          elif [ -f solutions/solution.c ]; then
+            echo "language=c" >> $GITHUB_ENV
+          elif [ -f solutions/solution.py ]; then
+            echo "language=python" >> $GITHUB_ENV
+          else
+            echo "No solution file found!"
+            exit 1
+          fi
 
-      - name: Compile and Run C++ Tests
-        if: matrix.language == 'cpp'
+      - name: Run C++ Tests
+        if: env.language == 'cpp'
         run: |
           g++ solutions/solution.cpp -o solution_cpp
-          ./solution_cpp < tests/test.cpp
+          g++ tests/test.cpp -o test_cpp
+          ./test_cpp
 
-      - name: Compile and Run Java Tests
-        if: matrix.language == 'java'
+      - name: Run C Tests
+        if: env.language == 'c'
         run: |
-          javac solutions/solution.java tests/test.java
-          java tests.test
+          gcc solutions/solution.c -o solution_c
+          gcc tests/test.c -o test_c
+          ./test_c
+
+      - name: Run Python Tests
+        if: env.language == 'python'
+        run: |
+          python3 tests/test.py
