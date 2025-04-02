@@ -1,102 +1,40 @@
-name: Auto Judge - Multi-Language Submission
+name: Run Tests
 
-on:
-  push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
+on: [push, pull_request]
 
 jobs:
-  detect-language:
+  test-solutions:
     runs-on: ubuntu-latest
-    outputs:
-      language: ${{ steps.detect.outputs.language }}
 
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v3
 
-      - name: Detect Submitted Language
-        id: detect
-        run: |
-          if ls solutions/*.java 1> /dev/null 2>&1; then
-            echo "language=java" >> $GITHUB_ENV
-            echo "::set-output name=language::java"
-          elif ls solutions/*.py 1> /dev/null 2>&1; then
-            echo "language=python" >> $GITHUB_ENV
-            echo "::set-output name=language::python"
-          elif ls solutions/*.cpp 1> /dev/null 2>&1; then
-            echo "language=cpp" >> $GITHUB_ENV
-            echo "::set-output name=language::cpp"
-          elif ls solutions/*.c 1> /dev/null 2>&1; then
-            echo "language=c" >> $GITHUB_ENV
-            echo "::set-output name=language::c"
-          else
-            echo "No valid solution found!"
-            exit 1
-
-  test-submission:
-    needs: detect-language
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        language: [java, python, cpp, c]
-    
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v3
-
-      # Java Execution
-      - name: Set Up Java
-        if: needs.detect-language.outputs.language == 'java'
+      - name: Set up Java
+        if: ${{ contains(fromJSON('["java", "cpp", "c", "py"]'), github.event.pull_request.head.ref) }}
         uses: actions/setup-java@v3
         with:
           distribution: 'temurin'
           java-version: '17'
 
-      - name: Compile Java Code
-        if: needs.detect-language.outputs.language == 'java'
-        run: javac -d . solutions/Solution.java tests/Test.java
+      - name: Compile and Run Java Tests
+        if: "[[ -n $(ls solutions/*.java 2>/dev/null) ]]"
+        run: |
+          javac -d . solutions/Solution.java tests/Test.java
+          java tests.Test
 
-      - name: Run Java Tests
-        if: needs.detect-language.outputs.language == 'java'
-        run: java tests.Test
+      - name: Compile and Run C Tests
+        if: "[[ -n $(ls solutions/*.c 2>/dev/null) ]]"
+        run: |
+          gcc solutions/solution.c tests/test.c -o test_c
+          ./test_c
 
-      # Python Execution
-      - name: Set Up Python
-        if: needs.detect-language.outputs.language == 'python'
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.x'
+      - name: Compile and Run C++ Tests
+        if: "[[ -n $(ls solutions/*.cpp 2>/dev/null) ]]"
+        run: |
+          g++ solutions/solution.cpp tests/test.cpp -o test_cpp
+          ./test_cpp
 
       - name: Run Python Tests
-        if: needs.detect-language.outputs.language == 'python'
-        run: python tests/test.py
-
-      # C++ Execution
-      - name: Install g++
-        if: needs.detect-language.outputs.language == 'cpp'
-        run: sudo apt update && sudo apt install -y g++
-
-      - name: Compile C++ Code
-        if: needs.detect-language.outputs.language == 'cpp'
-        run: g++ -o test tests/test.cpp solutions/solution.cpp
-
-      - name: Run C++ Tests
-        if: needs.detect-language.outputs.language == 'cpp'
-        run: ./test
-
-      # C Execution
-      - name: Install gcc
-        if: needs.detect-language.outputs.language == 'c'
-        run: sudo apt update && sudo apt install -y gcc
-
-      - name: Compile C Code
-        if: needs.detect-language.outputs.language == 'c'
-        run: gcc -o test tests/test.c solutions/solution.c
-
-      - name: Run C Tests
-        if: needs.detect-language.outputs.language == 'c'
-        run: ./test
+        if: "[[ -n $(ls solutions/*.py 2>/dev/null) ]]"
+        run: python3 tests/test.py
