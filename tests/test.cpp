@@ -1,11 +1,11 @@
 #include <iostream>
 #include <vector>
-#include "../solutions/solution.cpp"  // Include the actual solution file
+#include "../solutions/solution.cpp" // Include Solution class correctly
 
 using namespace std;
 
 bool testTwoSum(vector<int> nums, int target, vector<int> expected, string test_name) {
-    Solution solution;  // Instantiate Solution class
+    Solution solution;
     vector<int> result = solution.twoSum(nums, target);
 
     cout << "Test: " << test_name << endl;
@@ -23,7 +23,7 @@ bool testTwoSum(vector<int> nums, int target, vector<int> expected, string test_
     cout << "]" << endl;
 
     bool passed = (result.size() == 2 && result[0] == expected[0] && result[1] == expected[1]);
-    cout << "Status: " << (passed ? "PASSED" : "FAILED") << "\n" << endl;
+    cout << "Status: " << (passed ? "✅ PASSED" : "❌ FAILED") << "\n" << endl;
 
     return passed;
 }
