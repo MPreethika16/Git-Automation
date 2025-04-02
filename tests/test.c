@@ -1,83 +1,31 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
-#include "solution.h"
-
-typedef struct {
-    int key;
-    int value;
-} HashEntry;
-
-typedef struct {
-    HashEntry* entries;
-    int size;
-    int capacity;
-} HashMap;
-
-HashMap* createHashMap(int capacity) {
-    HashMap* map = (HashMap*)malloc(sizeof(HashMap));
-    map->entries = (HashEntry*)malloc(capacity * sizeof(HashEntry));
-    map->size = 0;
-    map->capacity = capacity;
-    return map;
-}
-
-void put(HashMap* map, int key, int value) {
-    map->entries[map->size].key = key;
-    map->entries[map->size].value = value;
-    map->size++;
-}
-
-int* find(HashMap* map, int key) {
-    for (int i = 0; i < map->size; i++) {
-        if (map->entries[i].key == key) {
-            return &map->entries[i].value;
-        }
-    }
-    return NULL;
-}
-
-void freeHashMap(HashMap* map) {
-    free(map->entries);
-    free(map);
-}
-
-int* twoSum(int* nums, int numsSize, int target) {
-    HashMap* numMap = createHashMap(numsSize);
-    int* result = (int*)malloc(2 * sizeof(int));
-    
-    for (int i = 0; i < numsSize; i++) {
-        int complement = target - nums[i];
-        int* found = find(numMap, complement);
-        if (found != NULL) {
-            result[0] = *found;
-            result[1] = i;
-            freeHashMap(numMap);
-            return result;
-        }
-        put(numMap, nums[i], i);
-    }
-    
-    freeHashMap(numMap);
-    return NULL;
-}
+#include "../solutions/solution.h" 
 
 bool testTwoSum(int* nums, int numsSize, int target, int* expected, const char* testName) {
-    int* result = twoSum(nums, numsSize, target);
-    
+    int returnSize;  
+    int* result = twoSum(nums, numsSize, target, &returnSize); 
+
     printf("Test: %s\n", testName);
     printf("Input: [");
     for (int i = 0; i < numsSize; i++) {
         printf("%d%s", nums[i], i < numsSize - 1 ? "," : "");
     }
     printf("], target = %d\n", target);
-    
+
+    if (result == NULL) {
+        printf("Result: NULL\n");
+        printf("Status: FAILED\n\n");
+        return false;
+    }
+
     printf("Expected: [%d,%d]\n", expected[0], expected[1]);
     printf("Result: [%d,%d]\n", result[0], result[1]);
-    
-    bool passed = (result != NULL && result[0] == expected[0] && result[1] == expected[1]);
+
+    bool passed = (result[0] == expected[0] && result[1] == expected[1]);
     printf("Status: %s\n\n", passed ? "PASSED" : "FAILED");
-    
+
     free(result);
     return passed;
 }
@@ -86,7 +34,6 @@ int main() {
     int passedCount = 0;
     const int totalTests = 15;
 
-    // Test 1
     int nums1[] = {2, 7, 11, 15};
     int expected1[] = {0, 1};
     passedCount += testTwoSum(nums1, 4, 9, expected1, "Basic Case");
@@ -162,6 +109,8 @@ int main() {
     int nums15[] = {1000000000, -1000000000, 5};
     int expected15[] = {1, 2};
     passedCount += testTwoSum(nums15, 3, -999999995, expected15, "Precision Issues");
+
+
 
     printf("Total Tests Passed: %d out of %d\n", passedCount, totalTests);
     return 0;
