@@ -1,73 +1,65 @@
-#include "solution.h"
-#include <stdlib.h>
 #include <stdio.h>
+#include <stdlib.h>
+#include <stdbool.h>
 
-// HashMap Structure
+// Hash map entry structure
 typedef struct {
     int key;
     int value;
-} HashEntry;
+} HashMapEntry;
 
-typedef struct {
-    HashEntry* entries;
-    int size;
-    int capacity;
-} HashMap;
-
-// Function to create hash map
-HashMap* createHashMap(int capacity) {
-    HashMap* map = (HashMap*)malloc(sizeof(HashMap));
-    map->entries = (HashEntry*)malloc(capacity * sizeof(HashEntry));
-    map->size = 0;
-    map->capacity = capacity;
-    return map;
-}
-
-// Function to add an entry to hash map
-void put(HashMap* map, int key, int value) {
-    map->entries[map->size].key = key;
-    map->entries[map->size].value = value;
-    map->size++;
-}
-
-// Function to find value by key
-int* find(HashMap* map, int key) {
-    for (int i = 0; i < map->size; i++) {
-        if (map->entries[i].key == key) {
-            return &map->entries[i].value;
-        }
-    }
-    return NULL;
-}
-
-// Function to free hash map
-void freeHashMap(HashMap* map) {
-    free(map->entries);
-    free(map);
-}
-
-// Optimized Two Sum function
 int* twoSum(int* nums, int numsSize, int target, int* returnSize) {
-    *returnSize = 2;  // Set return size
-
-    HashMap* numMap = createHashMap(numsSize);
+    *returnSize = 2;
     int* result = (int*)malloc(2 * sizeof(int));
+    HashMapEntry* map = (HashMapEntry*)malloc(numsSize * sizeof(HashMapEntry));
+    int count = 0;
 
     for (int i = 0; i < numsSize; i++) {
-        int complement = target - nums[i];
-        int* found = find(numMap, complement);
+        long long int complement = (long long)target - nums[i];
 
-        if (found != NULL) {  // Found valid pair
-            result[0] = *found;
-            result[1] = i;
-            freeHashMap(numMap);
-            return result;
+        for (int j = 0; j < count; j++) {
+            if (map[j].key == complement) {
+                result[0] = map[j].value;
+                result[1] = i;
+                free(map);
+                return result;
+            }
         }
 
-        put(numMap, nums[i], i);  // Store number and its index
+        map[count].key = nums[i];
+        map[count].value = i;
+        count++;
     }
 
-    freeHashMap(numMap);
+    free(map);
     free(result);
     return NULL;
+}
+
+// Test function
+bool testTwoSum(int* nums, int numsSize, int target, int* expected, const char* testName) {
+    int returnSize;  
+    int* result = twoSum(nums, numsSize, target, &returnSize);
+
+    printf("Test: %s\n", testName);
+    printf("Input: [");
+    for (int i = 0; i < numsSize; i++) {
+        printf("%d%s", nums[i], i < numsSize - 1 ? ", " : "");
+    }
+    printf("] Target: %d\n", target);
+
+    if (result == NULL) {
+        printf("Expected: NULL\nResult: NULL\nStatus: PASSED\n\n");
+        return expected == NULL;
+    }
+
+    printf("Expected: [%d, %d]\n", expected[0], expected[1]);
+    printf("Result: [%d, %d]\n", result[0], result[1]);
+
+    bool passed = (result[0] == expected[0] && result[1] == expected[1]) ||
+                  (result[0] == expected[1] && result[1] == expected[0]);
+    printf("Status: %s\n\n", passed ? "PASSED" : "FAILED");
+
+    free(result);
+    return passed;
 }
