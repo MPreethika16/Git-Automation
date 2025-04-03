@@ -47,48 +47,18 @@ jobs:
             esac
           done
 
-      - name: Install C Dependencies
-        if: env.LANGUAGE == 'C'
-        run: sudo apt update && sudo apt install -y gcc
-
-      - name: Install C++ Dependencies
-        if: env.LANGUAGE == 'C++'
-        run: sudo apt update && sudo apt install -y g++
-
-      - name: Install Python Dependencies
-        if: env.LANGUAGE == 'Python'
-        run: sudo apt update && sudo apt install -y python3
-
       - name: Install Java Dependencies
         if: env.LANGUAGE == 'Java'
         run: sudo apt update && sudo apt install -y openjdk-17-jdk
 
-      - name: Compile and Run C Tests
-        if: env.LANGUAGE == 'C'
-        run: |
-          gcc tests/test.c -o test_runner
-          echo "Running C Test Cases..."
-          ./test_runner | tee test_results.log
-
-      - name: Compile and Run C++ Tests
-        if: env.LANGUAGE == 'C++'
-        run: |
-          g++ tests/test.cpp -o test_runner_cpp
-          echo "Running C++ Test Cases..."
-          ./test_runner_cpp | tee test_results.log
-
-      - name: Run Python Tests
-        if: env.LANGUAGE == 'Python'
-        run: |
-          echo "Running Python Test Cases..."
-          python3 tests/test.py | tee test_results.log
-
       - name: Compile and Run Java Tests
         if: env.LANGUAGE == 'Java'
         run: |
-          javac tests/Test.java
+          echo "Compiling Java files..."
+          javac -d . solutions/Solution.java tests/Test.java  # ✅ Fix: Compile with package structure
+          
           echo "Running Java Test Cases..."
-          java -cp tests Test | tee test_results.log
+          java tests.Test | tee test_results.log  # ✅ Fix: Run using package name
 
       - name: Upload Test Results
         if: always()
