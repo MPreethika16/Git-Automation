@@ -12,6 +12,6 @@ public class Solution {
             }
             map.put(nums[i], i);
         }
-        return new int[]{};  // Return empty array if no solution is found
+        return new int[]{};  // Return empty array if no solution is found.
     }
 }

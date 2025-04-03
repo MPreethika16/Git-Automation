@@ -45,7 +45,7 @@ bool search(HashMap* map, int key, int* value) {
     return false;
 }
 
-// Free memory allocated for HashMap
+// Free memory allocated for HashMap.
 void freeHashMap(HashMap* map) {
     for (int i = 0; i < TABLE_SIZE; i++) {
         HashMapNode* node = map->table[i];
