@@ -77,7 +77,6 @@ int* twoSum(int* nums, int numsSize, int target, int* returnSize) {
         }
         insert(&map, nums[i], i);
     }
-
     freeHashMap(&map);
     free(result);
     return NULL;
