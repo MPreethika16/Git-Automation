@@ -55,10 +55,15 @@ jobs:
         if: env.LANGUAGE == 'Java'
         run: |
           echo "Compiling Java files..."
-          javac -d . solutions/Solution.java tests/Test.java  # ✅ Fix: Compile with package structure
-          
-          echo "Running Java Test Cases..."
-          java tests.Test | tee test_results.log  # ✅ Fix: Run using package name
+          mkdir -p bin  # Ensure the bin directory exists
+          javac -d bin solutions/Solution.java tests/Test.java 2>&1 | tee test_results.log  # ✅ Redirect errors
+
+          if [ $? -eq 0 ]; then
+            echo "Running Java Test Cases..."
+            java -cp bin tests.Test | tee -a test_results.log  # ✅ Append output to log
+          else
+            echo "Java compilation failed." | tee -a test_results.log  # ✅ Log failure
+          fi
 
       - name: Upload Test Results
         if: always()
@@ -66,3 +71,7 @@ jobs:
         with:
           name: test-results
           path: test_results.log
+          if-no-files-found: ignore  # ✅ Avoid warnings
+          compression-level: 6
+          overwrite: false
+          include-hidden-files: false

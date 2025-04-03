@@ -8,7 +8,7 @@ class Solution:
             rem = target - num
             if rem in num_map:
                 return [num_map[rem], i]
-            num_map[num] = i
+            num_map[num] = i 
         return []
 
    
