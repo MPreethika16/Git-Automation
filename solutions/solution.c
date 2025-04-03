@@ -7,11 +7,10 @@ typedef struct HashMapNode {
     int key;
     int value;
     struct HashMapNode* next;
-} HashMapNode;
+} HashMapNode;//
 
 // Define the HashMap
 #define TABLE_SIZE 10007  // Prime number for better hash distribution
-
 typedef struct {
     HashMapNode* table[TABLE_SIZE];
 } HashMap;
@@ -77,27 +76,8 @@ int* twoSum(int* nums, int numsSize, int target, int* returnSize) {
             return result;
         }
         insert(&map, nums[i], i);
-    }
-
+    }  
     freeHashMap(&map);
     free(result);
-    *returnSize = 0;
     return NULL;
-}
-
-// Test the function
-int main() {
-    int nums[] = {2, 7, 11, 15};
-    int target = 9;
-    int returnSize;
-    int* result = twoSum(nums, 4, target, &returnSize);
-
-    if (result) {
-        printf("Indices: %d, %d\n", result[0], result[1]);
-        free(result);
-    } else {
-        printf("No solution found.\n");
-    }
-
-    return 0;
 }
