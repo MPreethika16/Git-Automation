@@ -66,7 +66,9 @@ jobs:
       - name: Compile and Run C Tests
         if: env.LANGUAGE == 'C'
         run: |
-          gcc tests/test.c -o test_runner
+          gcc -c solutions/solution.c -o solution.o
+          gcc -c tests/test.c -o test.o
+          gcc solution.o test.o -o test_runner
           echo "Running C Test Cases..."
           ./test_runner | tee test_results.log
 
