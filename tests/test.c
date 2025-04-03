@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
+#include "../solutions/solution.c"
   // Ensure the correct path
 
   int* twoSum(int* nums, int numsSize, int target, int* returnSize);
