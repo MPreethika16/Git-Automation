@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
-// Define a struct for HashMap Node
+// Define a struct for HashMap Node.
 typedef struct HashMapNode {
     int key;
     int value;
