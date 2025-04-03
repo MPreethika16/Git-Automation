@@ -15,5 +15,5 @@ public class Solution {
         return new int[]{};   // Return empty array if no solution is found.
     }
 }
-   
+    
 

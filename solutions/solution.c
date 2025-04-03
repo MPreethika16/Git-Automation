@@ -9,7 +9,7 @@ typedef struct HashMapNode {
     struct HashMapNode* next;
 } HashMapNode;//
 
-// Define the HashMap
+// Define the HashMap 
 #define TABLE_SIZE 10007  // Prime number for better hash distribution
 typedef struct {
     HashMapNode* table[TABLE_SIZE];
