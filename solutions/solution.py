@@ -10,5 +10,5 @@ class Solution:
                 return [num_map[rem], i]
             num_map[num] = i 
         return []
- 
+
    
