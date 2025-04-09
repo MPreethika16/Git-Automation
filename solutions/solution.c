@@ -54,7 +54,7 @@ void freeHashMap(HashMap* map) {
             node = node->next;
             free(temp);
         }
-        map->table[i] = NULL; // Ensure clean state
+        map->table[i] = NULL; 
     }
 }
 
