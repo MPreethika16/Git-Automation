@@ -34,6 +34,8 @@ def main():
     passed_count += testTwoSum([-3, -3, 4, 90], -6, [0, 1], "Duplicate with Negative Target")
 
     print(f"Total Tests Passed: {passed_count} out of {total_tests}")
+     if passed_count != total_tests:
+        sys.exit(1)
 
 if __name__ == "__main__":
     main()
