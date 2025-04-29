@@ -1,5 +1,11 @@
+
 import sys
-from solution import Solution  # Import your solution file
+import os
+
+# Add the solutions folder to the system path
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../solutions")))
+from solution import Solution  # Now it should work
+
 
 def testTwoSum(nums, target, expected, test_name):
     solution = Solution()  # Instantiate Solution class
