@@ -84,11 +84,12 @@ jobs:
           exit_code=${PIPESTATUS[0]}
           exit $exit_code
 
-      - name: Run Python Tests
+           - name: Run Python Tests
         if: env.LANGUAGE == 'Python'
         run: |
           echo "Running Python Test Cases..."
-          python3 tests/test.py | tee test_results.log
+          python3 tests/test.py || exit 1  # Ensures failure causes the workflow to fail
+
 
       - name: Compile and Run Java Tests
         if: env.LANGUAGE == 'Java'
