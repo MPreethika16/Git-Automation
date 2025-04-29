@@ -44,5 +44,5 @@ int main() {
     passed_count += testTwoSum({-3, -3, 4, 90}, -6, {0, 1}, "Duplicate with Negative Target");
 
     cout << "Total Tests Passed: " << passed_count << " out of " << total_tests << endl;
-    return 0;
+    return (passed_count == total_tests) ? 0 : 1;
 }
