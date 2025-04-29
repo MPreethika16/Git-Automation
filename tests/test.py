@@ -1,9 +1,5 @@
 import sys
-import os
-
-# Add the solutions folder to the system path
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../solutions")))
-from solution import Solution  # type: ignore # Import the solution file
+from solution import Solution  # Import your solution file
 
 def testTwoSum(nums, target, expected, test_name):
     solution = Solution()  # Instantiate Solution class
@@ -34,8 +30,9 @@ def main():
     passed_count += testTwoSum([-3, -3, 4, 90], -6, [0, 1], "Duplicate with Negative Target")
 
     print(f"Total Tests Passed: {passed_count} out of {total_tests}")
-     if passed_count != total_tests:
-        sys.exit(1)
+    if passed_count != total_tests:
+        print("Exiting with failure code (1)")
+        sys.exit(1)  # Ensure the process exits with a non-zero code if tests fail
 
 if __name__ == "__main__":
     main()
