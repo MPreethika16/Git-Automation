@@ -7,3 +7,4 @@ class Solution:
                 return [num_to_index[complement], i]
             num_to_index[num] = i
         return []
+ 
