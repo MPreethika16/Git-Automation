@@ -72,12 +72,16 @@ jobs:
           echo "Running C Test Cases..."
           ./test_runner | tee test_results.log
 
-      - name: Compile and Run C++ Tests
-        if: env.LANGUAGE == 'C++'
+      - name: Compile and Run C Tests
+        if: env.LANGUAGE == 'C'
         run: |
-          g++ tests/test.cpp -o test_runner_cpp
-          echo "Running C++ Test Cases..."
-          ./test_runner_cpp | tee test_results.log
+          gcc -c solutions/solution.c -o solution.o
+          gcc -c tests/test.c -o test.o
+          gcc solution.o test.o -o test_runner
+          echo "Running C Test Cases..."
+          ./test_runner | tee test_results.log
+          exit_code=${PIPESTATUS[0]}
+          exit $exit_code
 
       - name: Run Python Tests
         if: env.LANGUAGE == 'Python'
