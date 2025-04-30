@@ -110,6 +110,6 @@ int main() {
     // Print final results
     printf("Total Tests Passed: %d out of %d\n", passedCount, totalTests);
 
-    return 0;
+    return (passed == total) ? 0 : 1;
 }
  
