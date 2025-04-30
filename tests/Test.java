@@ -40,6 +40,12 @@ public class Test {
         if (runTest(new int[]{1, 2, 3, 4}, 10, new int[]{}, "No Solution Case")) passedCount++;  // New test case
 
         System.out.println("Summary: " + passedCount + "/" + totalTests + " tests passed.");
+        // ✅ Proper exit code for CI
+        if (passedCount != totalTests) {
+            System.exit(1); // fail
+        } else {
+            System.exit(0); // pass
+        }
     }
 
     private static boolean runTest(int[] nums, int target, int[] expected, String testName) {
