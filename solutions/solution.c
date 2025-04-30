@@ -60,5 +60,5 @@ void freeHashMap(HashMap* map) {
 
 // Function to find two sum indices
 int* twoSum(int* nums, int numsSize, int target, int* returnSize) {
- 
+ //write your code here
 }
