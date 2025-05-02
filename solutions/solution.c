@@ -61,26 +61,26 @@ void freeHashMap(HashMap* map) {
 // Function to find two sum indices
 int* twoSum(int* nums, int numsSize, int target, int* returnSize) {
  //write your code here
-     HashItem* map = NULL;
-    for (int i = 0; i < numsSize; i++) {
+  *returnSize = 0;
+    int* result = malloc(2 * sizeof(int));
+    if (!result) return NULL;
+
+    HashMap map = {0};  // initialize map with all NULLs
+
+    for (int i = 0; i < numsSize; ++i) {
         int complement = target - nums[i];
-        HashItem* found;
-        HASH_FIND_INT(map, &complement, found);
-        if (found) {
-            int* result = malloc(2 * sizeof(int));
-            result[0] = found->index;
+        int foundIndex;
+        if (search(&map, complement, &foundIndex)) {
+            result[0] = foundIndex;
             result[1] = i;
             *returnSize = 2;
-            HASH_CLEAR(hh, map);
+            freeHashMap(&map);
             return result;
         }
-
-        HashItem* item = malloc(sizeof(HashItem));
-        item->key = nums[i];
-        item->index = i;
-        HASH_ADD_INT(map, key, item);
+        insert(&map, nums[i], i);
     }
 
-    *returnSize = 0;
+    free(result);
+    freeHashMap(&map);
     return NULL;
 } 
